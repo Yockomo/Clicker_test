@@ -18,19 +18,19 @@ public class Enemy : MonoBehaviour
     private void Start()
     {
         Constructor();
-        StartCoroutine(Move());
     }
 
     protected virtual void Constructor()
     {
         try
-         {
+        {
             agent = GetComponent<NavMeshAgent>();
         }
         catch
         {
             throw new NullReferenceException("There is no NavMeshAgent component on Enemy");
         }
+        StartCoroutine(Move());
     }
 
     public void SetRoutePositions(Vector3[] routePositions)
