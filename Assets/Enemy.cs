@@ -1,60 +1,60 @@
-using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
-public class Enemy : MonoBehaviour
+[RequireComponent(typeof(EnemyHealth),typeof(EnemyMovement))]
+
+public class Enemy : MonoBehaviour, IClickable
 {
-    [SerializeField] private int clicksToKill;
-    [SerializeField,Range(0,10)] private int routeLength;
-    [SerializeField] private float destinationGap;
+    private EnemyHealth hp;
+    private EnemyMovement movement;
 
-    private Vector3[] route;
-    private Vector3 currentDestination;
-    private NavMeshAgent agent;
-
-    public int ClicksToKill { get { return clicksToKill; }}
+    public bool isClicked { get; set; }
     
     private void Start()
     {
-        Constructor();
-    }
-
-    protected virtual void Constructor()
-    {
         try
         {
-            agent = GetComponent<NavMeshAgent>();
+            hp = GetComponent<EnemyHealth>();
+            movement = GetComponent<EnemyMovement>();
         }
         catch
         {
-            throw new NullReferenceException("There is no NavMeshAgent component on Enemy");
-        }
-        StartCoroutine(Move());
-    }
-
-    public void SetRoutePositions(Vector3[] routePositions)
-    {
-        route = new Vector3[routeLength];
-        route = routePositions;
-    }
-
-    public virtual IEnumerator Move()
-    {
-        foreach (var point in route)
-        {
-            if (point != null)
-            {
-                agent.SetDestination(point);
-                currentDestination = point;
-                yield return new WaitWhile(CheckDestinationReached);
-            }
+            Debug.Log("There are no EnemyHealth/EnemyMovement components on Enemy");
         }
     }
 
-    private bool CheckDestinationReached()
+    private void Update()
     {
-        float distanceToTarget = Vector3.Distance(transform.position, currentDestination);
-        return distanceToTarget < destinationGap ;
+        if (isClicked)
+            OnClick();
+    }
+
+    public void OnClick()
+    {
+        hp.TakeDamage();
+        isClicked = false;
+    }
+
+    public void SetEnemyHp(int hpValue)
+    {
+        hp.ChangeMaxHp(hpValue);
+    }
+
+    public void ResetEnemyHealth()
+    {
+        hp.ResetHealth();
+    }
+
+    public void SetEnemyRoute(List<Vector3> route)
+    {
+        if (movement == null)
+            movement = GetComponent<EnemyMovement>();
+        movement.SetRoutePositions(route);
+    }
+
+    public void SetEnemySpeed(float speedValue)
+    {
+        movement.SetEnemySpeed(speedValue);
     }
 }
