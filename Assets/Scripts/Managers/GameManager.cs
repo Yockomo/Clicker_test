@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -6,8 +7,7 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private EnemyPool pool;
     [SerializeField] private LeaderboardReader leaderboardReader;
-    [SerializeField] private TimeFreezer freezer;
-
+    [SerializeField] private TextMeshProUGUI playerName;
     private int currentScore;
 
     public UnityEvent UpdateUi;
@@ -45,10 +45,10 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(1);
     }
 
-    public void AddNewPlayerToLeaderBoard(string name)
+    public void AddNewPlayerToLeaderBoard()
     {
         var player = new Player();
-        player.Name = name;
+        player.Name = playerName.text;
         player.Score = currentScore;
         leaderboardReader.AddPlayerToLeaderboard(player);
     }

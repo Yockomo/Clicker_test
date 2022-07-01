@@ -24,7 +24,7 @@ public class ClickHandler : MonoBehaviour
         var direction = new Vector3(0, -1, 0);
 
         Physics.Raycast(worldCoordinates,direction, out RaycastHit rayHit,999f);
-        var result = Physics.OverlapSphere(rayHit.point, 0.5f);
+        var result = Physics.OverlapSphere(rayHit.point, 0.6f);
         foreach (var res in result)
         {
             if ( res.TryGetComponent<IClickable>(out IClickable click))
