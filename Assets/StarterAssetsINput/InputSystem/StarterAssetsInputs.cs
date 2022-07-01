@@ -18,12 +18,12 @@ namespace StarterAssets
 
         private void OnEnable()
         {
-            touchControl.Enable();
+            touchControl?.Enable();
         }
 
         private void OnDisable()
         {
-            touchControl.Disable();
+            touchControl?.Disable();
         }
 
 		private void Start()

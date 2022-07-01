@@ -1,11 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ExplosionBooster : Booster, IClickable
 {
-    [SerializeField] private EnemyPool pool;
-
     public void Click()
     {
         StartCoroutine(Boost());
@@ -16,16 +13,18 @@ public class ExplosionBooster : Booster, IClickable
         storedPosition = transform.position;
         transform.position = new Vector3(storedPosition.x, -2, storedPosition.z);
         yield return null;
-        DestroyEnemies(pool.GetActiveEnemies());
+        DestroyEnemies();
         StartCoroutine(CoolDown());
     }
 
-    private void DestroyEnemies(List<GameObject> enemies)
+    private void DestroyEnemies()
     {
-        var list = enemies;
-        while(list.Count > 1)
+        var enemies = Physics.OverlapSphere(storedPosition, 10f);
+        
+        foreach(var enemy in enemies)
         {
-            list[0].GetComponent<EnemyHealth>().Die();
+            if(enemy != null && enemy.TryGetComponent<EnemyHealth>(out EnemyHealth health))
+                health.Die();
         }
     }
 }

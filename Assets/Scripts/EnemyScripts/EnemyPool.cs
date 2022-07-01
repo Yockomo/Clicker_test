@@ -16,6 +16,7 @@ public class EnemyPool : MonoBehaviour
     private List<Vector3> navMeshRoutePoints;
     private ObjectPool<GameObject> enemyPool;
     private bool isCooldown;
+    private bool isStoped;
     private List<GameObject> enemiesInPool = new List<GameObject>();
 
     public UnityEvent OnEnemyCreate;
@@ -31,7 +32,7 @@ public class EnemyPool : MonoBehaviour
 
     private void Update()
     {
-        if(!isCooldown)
+        if(!isCooldown && !isStoped)
         {
            StartCoroutine(AddEnemyOnField());
         }
@@ -125,5 +126,15 @@ public class EnemyPool : MonoBehaviour
         {
             enemy.GetComponent<Enemy>().UpEnemySpeed(speedUp);
         }
+    }
+
+    public void Stop()
+    {
+        isStoped = true;
+    }
+
+    public void Continue()
+    {
+        isStoped = false;
     }
 }
